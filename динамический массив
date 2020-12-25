@@ -1,0 +1,60 @@
+class Dynarray {
+private:
+ int *pa; 
+ int length; 
+ int nextIndex; 
+public:
+ Dynarray(); // the constructor
+ ~Dynarray(); // the destructor
+ int& operator[](int index); // the indexing operation
+ void add(int val); // add a new value to the end
+ int size(); // return length
+}; 
+
+Dynarray::Dynarray() {
+ pa = new int[10];
+ for (int i = 0; i < 10; i++)
+ pa[i] = 0;
+ length = 10;
+ nextIndex = 0;
+} 
+
+Dynarray::~Dynarray() {
+ delete [] pa;
+} 
+
+int& Dynarray::operator[](int index) {
+ int *pnewa; 
+ if (index >= length) { // is element in the array?
+ pnewa = new int[index + 10]; // allocate a bigger array
+ for (int i = 0; i < nextIndex; i++) // copy old values
+ pnewa[i] = pa[i];
+ for (int j = nextIndex; j < index + 10; j++) 
+ pnewa[j] = 0;
+ length = index + 10; // set length to bigger size
+ delete [] pa; // delete the old array
+ pa = pnewa; 
+ }
+ if (index > nextIndex) 
+ nextIndex = index + 1;
+ return *(pa + index);
+} 
+
+int Dynarray::size() {
+ return length;
+} 
+
+void Dynarray::add(int val) {
+ int *pnewa;
+ if (nextIndex == length) {
+ length = length + 10;
+ pnewa = new int[length];
+ for (int i = 0; i < nextIndex; i++)
+ pnewa[i] = pa[i];
+ for (int j = nextIndex; j < length; j++)
+ pnewa[j] = 0;
+ delete [] pa;
+ pa = pnewa;
+ }
+ pa[nextIndex++] = val;
+} 
